@@ -1,0 +1,28 @@
+
+services:
+  app:
+    container_name: fastapi_exp_test
+    build: ./
+    depends_on:
+      - db
+    command: bash -c 'while !</dev/tcp/db/5433; do sleep 1; done; uvicorn app.main:app --host localhost --port 8000'
+    volumes:
+      - ./app:/src/app
+    ports:
+      - 8001:8000
+    restart: always
+    env_file:
+      - .env
+
+  db:
+    container_name: fastapi_exp_db
+    image: postgres
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    ports:
+      - 5433:5432
+    volumes:
+      - .postgres:/var/lib/postgresql/data
+    restart: always
