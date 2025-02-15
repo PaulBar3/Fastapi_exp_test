@@ -13,3 +13,5 @@ class ExpenseAddSchema(ExpenseSchema):
     created_at: datetime = datetime.now()
 
 
+class ExpenseUpdateSchema(ExpenseSchema):
+    pass

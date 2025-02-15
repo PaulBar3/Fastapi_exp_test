@@ -2,7 +2,6 @@ from typing import Annotated
 from fastapi import APIRouter, Depends
 from app.reposetory import ExpenseRepository
 from app.schemas import ExpenseSchema, ExpenseAddSchema
-from fastapi.exceptions import HTTPValidationError
 
 
 router = APIRouter(prefix="/expenses", tags=["Расходы"])
@@ -14,12 +13,7 @@ async def get_expenses() -> list[ExpenseSchema]:
     return expense
 
 
-@router.post("/", responses={
-    422:{
-        "description": "Невалидные данные",
-        "content": HTTPValidationError
-    }
-})
+@router.post("/")
 async def add_expense(
     expense: Annotated[ExpenseAddSchema, Depends(ExpenseSchema)]) -> dict:
     expense_id = await ExpenseRepository.add_expenses(expense)
